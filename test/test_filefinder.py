@@ -36,9 +36,13 @@ class TestFileFinder(unittest.TestCase):
             to make path relative to the simple_filefinder dir.
         """
         ff = FileFinder(roots, **kwargs)
-        return sorted(list(path_relative_to_dir(path, 'simple_filefinder')
-                                for path in ff.files()
-                                if not filter_out_path(path)))
+        return sorted(
+            [
+                path_relative_to_dir(path, 'simple_filefinder')
+                for path in ff.files()
+                if not filter_out_path(path)
+            ]
+        )
 
     def assertPathsEqual(self, first, second):
         """ Compare lists of paths together, normalizing them for portability

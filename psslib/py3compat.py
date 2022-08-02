@@ -39,7 +39,4 @@ else:
 def tostring(b):
     """ Convert the given bytes or string object to string
     """
-    if isinstance(b, bytes):
-        return bytes2str(b)
-    else:
-        return b
+    return bytes2str(b) if isinstance(b, bytes) else b

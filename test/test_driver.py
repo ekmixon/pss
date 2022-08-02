@@ -12,8 +12,7 @@ def matches(filename, outputs):
         of MockOutputFormatter, delimited from both ends with START_MATCHES
         and END_MATCHES for the given filename.
     """
-    seq = []
-    seq.append(('START_MATCHES', os.path.normpath(filename)))
+    seq = [('START_MATCHES', os.path.normpath(filename))]
     seq.extend(outputs)
     seq.append(('END_MATCHES', os.path.normpath(filename)))
     return seq

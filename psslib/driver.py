@@ -271,10 +271,7 @@ def pss_run(roots,
     filter_include_patterns = set(include_patterns)
     filter_exclude_patterns = set(exclude_patterns)
 
-    if search_all_files_and_dirs or search_all_types:
-        # Don't apply restrictions
-        pass
-    else:
+    if not search_all_files_and_dirs and not search_all_types:
         filter_exclude_patterns |= set(IGNORED_FILE_PATTERNS)
 
         for typ in (include_types or TYPE_MAP):
@@ -305,10 +302,7 @@ def pss_run(roots,
             pattern = ''
         openmode = 'r' if PY3 else 'rU'
     else:
-        if pattern is None:
-            pattern = b''
-        else:
-            pattern = str2bytes(pattern)
+        pattern = b'' if pattern is None else str2bytes(pattern)
         openmode = 'rb'
 
     if (    not ignore_case and
@@ -359,13 +353,18 @@ def pss_run(roots,
                 # If only files are to be found either with or without matches...
                 if only_find_files:
                     matches = list(matcher.match_file(fileobj, max_match_count=1))
-                    found = (
-                        (   matches and
-                            only_find_files_option == PssOnlyFindFilesOption.FILES_WITH_MATCHES)
-                        or
-                        (   not matches and
-                            only_find_files_option == PssOnlyFindFilesOption.FILES_WITHOUT_MATCHES))
-                    if found:
+                    if found := (
+                        (
+                            matches
+                            and only_find_files_option
+                            == PssOnlyFindFilesOption.FILES_WITH_MATCHES
+                        )
+                        or (
+                            not matches
+                            and only_find_files_option
+                            == PssOnlyFindFilesOption.FILES_WITHOUT_MATCHES
+                        )
+                    ):
                         output_formatter.found_filename(filepath)
                         match_found = True
                     continue
@@ -433,12 +432,10 @@ def _pattern_has_uppercase(pattern):
     for c in pattern:
         if skipnext:
             skipnext = False
-            continue
         elif c == '\\':
             skipnext = True
-        else:
-            if c >= 'A' and c <= 'Z':
-                return True
+        elif c >= 'A' and c <= 'Z':
+            return True
     return False
 
 

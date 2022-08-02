@@ -54,10 +54,7 @@ class ContentMatcher(object):
                             ignore_case=ignore_case,
                             whole_words=whole_words,
                             literal_pattern=literal_pattern)
-        if invert_match:
-            self.match_file = self.inverted_matcher
-        else:
-            self.match_file = self.matcher
+        self.match_file = self.inverted_matcher if invert_match else self.matcher
         self.max_match_count = max_match_count
 
         # Cache frequently used attributes for faster access
@@ -140,10 +137,8 @@ class ContentMatcher(object):
         if whole_words:
             b = r'\b' if isinstance(pattern, str) else br'\b'
             pattern = b + pattern + b
-        regex = re.compile(pattern, re.I if ignore_case else 0)
-        return regex
+        return re.compile(pattern, re.I if ignore_case else 0)
 
 
-if __name__ == '__main__':
-    pass
+pass
 

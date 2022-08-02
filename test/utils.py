@@ -45,9 +45,7 @@ def filter_out_path(path):
     """ Some paths have to be filtered out to successully compare to pss's
         output.
     """
-    if 'file_bad_symlink' in path and platform.system() == 'Windows':
-        return True
-    return False
+    return 'file_bad_symlink' in path and platform.system() == 'Windows'
 
 
 class MockOutputFormatter(OutputFormatter):

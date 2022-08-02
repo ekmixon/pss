@@ -37,8 +37,7 @@ class DefaultPssOutputFormatter(OutputFormatter):
         self.do_colors = do_colors
         self.prefix_filename_to_file_matches = prefix_filename_to_file_matches
         self.do_heading = do_heading
-        self.inline_filename = (True if prefix_filename_to_file_matches and not do_heading
-                                else False)
+        self.inline_filename = bool(prefix_filename_to_file_matches and not do_heading)
         self.show_line_of_match = show_line_of_match
         self.show_column_of_first_match = show_column_of_first_match
 
@@ -75,14 +74,14 @@ class DefaultPssOutputFormatter(OutputFormatter):
 
     def matching_line(self, matchresult, filename):
         if self.inline_filename:
-            self._emit_colored('%s' % filename, self.style_filename)
+            self._emit_colored(f'{filename}', self.style_filename)
             self._emit(':')
         if self.show_line_of_match:
-            self._emit_colored('%s' % matchresult.matching_lineno, self.style_lineno)
+            self._emit_colored(f'{matchresult.matching_lineno}', self.style_lineno)
             self._emit(':')
         first_match_range = matchresult.matching_column_ranges[0]
         if self.show_column_of_first_match:
-            self._emit('%s:' % first_match_range[0])
+            self._emit(f'{first_match_range[0]}:')
 
         # Emit the chunk before the first matching chunk
         line = matchresult.matching_line
@@ -101,10 +100,10 @@ class DefaultPssOutputFormatter(OutputFormatter):
 
     def context_line(self, line, lineno, filename):
         if self.inline_filename:
-            self._emit_colored('%s' % filename, self.style_filename)
+            self._emit_colored(f'{filename}', self.style_filename)
             self._emit('-')
         if self.show_line_of_match:
-            self._emit_colored('%s' % lineno, self.style_lineno)
+            self._emit_colored(f'{lineno}', self.style_lineno)
             self._emit('-')
         if self.show_column_of_first_match:
             self._emit('1-')

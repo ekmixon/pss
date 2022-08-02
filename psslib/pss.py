@@ -154,7 +154,7 @@ def main(argv=sys.argv, output_formatter=None):
         print('<<interrupted - exiting>>')
         return 2
     except Exception as err:
-        print('<<unexpected error: %s>>' % err)
+        print(f'<<unexpected error: {err}>>')
         return 2
     else:
         return 0 if match_found else 1
@@ -213,7 +213,9 @@ def parse_cmdline(cmdline_args):
         usage='usage: %prog [options] <pattern> [files]',
         description=DESCRIPTION,
         prog='pss',
-        version='pss %s' % __version__)
+        version=f'pss {__version__}',
+    )
+
 
     optparser.add_option('--help-types',
         action='store_true', dest='help_types',
@@ -366,14 +368,20 @@ def parse_cmdline(cmdline_args):
             parser.values.typelist = [optname]
 
     for t in TYPE_MAP:
-        optparser.add_option('--' + t,
+        optparser.add_option(
+            f'--{t}',
             help=optparse.SUPPRESS_HELP,
             action='callback',
-            callback=type_option_callback)
-        optparser.add_option('--no' + t,
+            callback=type_option_callback,
+        )
+
+        optparser.add_option(
+            f'--no{t}',
             help=optparse.SUPPRESS_HELP,
             action='callback',
-            callback=type_option_callback)
+            callback=type_option_callback,
+        )
+
 
     options, args = optparser.parse_args(cmdline_args)
     return options, args, optparser
@@ -390,14 +398,14 @@ def print_help_types():
     print(HELP_TYPES_PREAMBLE)
 
     for typ in sorted(TYPE_MAP):
-        typestr = '--[no]%s' % typ
+        typestr = f'--[no]{typ}'
         print('    %-21s' % typestr, end='')
         print(' '.join(TYPE_MAP[typ].extensions + TYPE_MAP[typ].patterns))
     print()
 
 
 def show_type_list():
-    print(' '.join(('--%s' % typ) for typ in TYPE_MAP))
+    print(' '.join(f'--{typ}' for typ in TYPE_MAP))
 
 
 def _splice_comma_names(namelist):

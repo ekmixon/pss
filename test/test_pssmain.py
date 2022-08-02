@@ -503,9 +503,7 @@ class TestPssMain(unittest.TestCase):
                                    (['--invalid'], 2),
                                    ([['invalid arg causes error']], 2)]:
                 rc = main(['pss'] + args, output_formatter=self.of)
-                self.assertEqual(rc, expected,
-                                 'for {} {} got rc={}'.format(
-                                     args, expected, rc))
+                self.assertEqual(rc, expected, f'for {args} {expected} got rc={rc}')
         finally:
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
@@ -541,8 +539,7 @@ class TestPssMain(unittest.TestCase):
             stdout.isatty(), to emulate the behavior used by the driver (see
             nobreak flag).
         """
-        seq = []
-        seq.append(('START_MATCHES', os.path.normpath(filename)))
+        seq = [('START_MATCHES', os.path.normpath(filename))]
         seq.extend(outputs)
         if add_end is None:
             add_end = sys.stdout.isatty()

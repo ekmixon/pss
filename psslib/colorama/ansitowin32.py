@@ -8,9 +8,7 @@ from .winterm import WinTerm, WinColor, WinStyle
 from .win32 import windll
 
 
-winterm = None
-if windll is not None:
-    winterm = WinTerm()
+winterm = WinTerm() if windll is not None else None
 
 
 def is_a_tty(stream):
@@ -126,7 +124,7 @@ class AnsiToWin32(object):
                 AnsiBack.LIGHTCYAN_EX: (winterm.back, WinColor.CYAN, True),
                 AnsiBack.LIGHTWHITE_EX: (winterm.back, WinColor.GREY, True),
             }
-        return dict()
+        return {}
 
     def write(self, text):
         if self.strip or self.convert:
@@ -181,7 +179,7 @@ class AnsiToWin32(object):
                 params = params + (1,)
         else:
             params = tuple(int(p) for p in paramstring.split(';') if len(p) != 0)
-            if len(params) == 0:
+            if not params:
                 # defaults:
                 if command in 'JKm':
                     params = (0,)
